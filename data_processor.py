@@ -29,14 +29,7 @@ def Read_ant(ant_path):
     
     return np.array(quad_list)
 
-def read_ant(ant_path):
-    quad_list = []
-    with open(ant_path) as f:
-        lines = f.readlines()
-        for line in lines:
-            quad = line.rstrip('\n').split(',')
-            quad_list.append(quad)
-    return np.array(quad_list).astype('int')
+
 
 
 def resize_with_padding(img, points, output_width, output_height):
