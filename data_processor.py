@@ -342,7 +342,7 @@ def restore_rectangle(origin, geometry):
 
 
 split_rate = 0.1
-data_dir = '/content/drive/MyDrive/DS_store/DS_train/Det_train'
+data_dir = '/content/drive/MyDrive/DS-store/Det_train'
 
 if __name__ == '__main__':
     split_data(os.path.join(data_dir, "img"), os.path.join(data_dir, "gt"))

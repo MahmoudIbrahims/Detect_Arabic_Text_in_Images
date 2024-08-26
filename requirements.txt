@@ -1,0 +1,6 @@
+tensorflow_gpu
+numpy
+opencv-python
+shapely
+!pip install -r requirements.txt
+!pip install --upgrade tf_slim
