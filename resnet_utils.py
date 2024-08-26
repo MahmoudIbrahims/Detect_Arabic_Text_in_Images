@@ -73,39 +73,7 @@ def subsample(inputs, factor, scope=None):
 
 
 def conv2d_same(inputs, num_outputs, kernel_size, stride, rate=1, scope=None):
-    """Strided 2-D convolution with 'SAME' padding.
-
-    When stride > 1, then we do explicit zero-padding, followed by conv2d with
-    'VALID' padding.
-
-    Note that
-
-       net = conv2d_same(inputs, num_outputs, 3, stride=stride)
-
-    is equivalent to
-
-       net = slim.conv2d(inputs, num_outputs, 3, stride=1, padding='SAME')
-       net = subsample(net, factor=stride)
-
-    whereas
-
-       net = slim.conv2d(inputs, num_outputs, 3, stride=stride, padding='SAME')
-
-    is different when the input's height or width is even, which is why we add the
-    current function. For more details, see ResnetUtilsTest.testConv2DSameEven().
-
-    Args:
-      inputs: A 4-D tensor of size [batch, height_in, width_in, channels].
-      num_outputs: An integer, the number of output filters.
-      kernel_size: An int with the kernel_size of the filters.
-      stride: An integer, the output stride.
-      rate: An integer, rate for atrous convolution.
-      scope: Scope.
-
-    Returns:
-      output: A 4-D tensor of size [batch, height_out, width_out, channels] with
-        the convolution output.
-    """
+    """Strided 2-D convolution with 'SAME' padding using tf_slim."""
     if stride == 1:
         return slim.conv2d(inputs, num_outputs, kernel_size, stride=1, rate=rate,
                            padding='SAME', scope=scope)
@@ -118,6 +86,8 @@ def conv2d_same(inputs, num_outputs, kernel_size, stride, rate=1, scope=None):
                         [[0, 0], [pad_beg, pad_end], [pad_beg, pad_end], [0, 0]])
         return slim.conv2d(inputs, num_outputs, kernel_size, stride=stride,
                            rate=rate, padding='VALID', scope=scope)
+
+    
 
 
 @slim.add_arg_scope

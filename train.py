@@ -1,4 +1,7 @@
 #train
+#!pip install -r requirements.txt
+#!pip install --upgrade tf_slim
+
 import tensorflow as tf
 import tf_slim as slim
 import east_model
@@ -28,9 +31,23 @@ def train(img_dir, gt_dir, train_list, pretrained_path):
     loss = network.loss(gt_input[:, :, :, 0:1], pred_score, gt_input[:, :, :, 1:6], pred_gmt)
 
     global_step = tf.Variable(0, trainable=False, name='global_step') # Use tf.Variable
-    learning_rate = tf.keras.optimizers.schedules.ExponentialDecay( 0.0001, decay_steps=10000, decay_rate=0.94, staircase=True )
 
-    update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.0001,
+                                                              decay_steps=10000,
+                                                             decay_rate=0.94,
+                                                              staircase=True )
+
+    #initial_learning_rate = 0.1
+    #lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    #initial_learning_rate=initial_learning_rate,
+    #decay_steps=10000,
+    #decay_rate=0.9,
+    #staircase=True
+    #)
+
+    #optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+
+    update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
@@ -44,7 +61,7 @@ def train(img_dir, gt_dir, train_list, pretrained_path):
         if RESTORE:
             saver.restore(sess, tf.train.latest_checkpoint('./checkpoint'))
         else:
-            sess.run(tf.global_variables_initializer())
+            sess.run(tf.compat.v1.global_variables_initializer())
             restore_op(sess)
 
         data_list = data_processor.read_lines(train_list)
@@ -59,5 +76,7 @@ def train(img_dir, gt_dir, train_list, pretrained_path):
 
 
 if __name__ == '__main__':
-    train('/content/drive/MyDrive/DS-store/Det_train/input_img', '/content/drive/MyDrive/DS-store/Det_train/input_gt',
-          '/content/drive/MyDrive/DS-store/Det_train/train.list', '/content/drive/MyDrive/DS-store/Det_train/pretrained/resnet_v1_50.ckpt')
+    train('/content/drive/MyDrive/DS_store/DS_train/Det_train/input_img',
+          '/content/drive/MyDrive/DS_store/DS_train/Det_train/input_gt',
+          '/content/drive/MyDrive/DS_store/DS_train/Det_train/train.list',
+          '/content/drive/MyDrive/DS_store/DS_train/Det_train/pretrained/resnet_v1_50.ckpt')
