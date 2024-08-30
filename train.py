@@ -1,13 +1,13 @@
-#train
-#!pip install -r requirements.txt
-#!pip install --upgrade tf_slim
-
 import tensorflow as tf
 import tf_slim as slim
 import east_model
 import data_processor
 
-BATCH_SIZE = 32
+# Set the logging level to suppress warnings
+tf.get_logger().setLevel('ERROR')
+
+
+BATCH_SIZE = 8
 IMG_SIZE = 512
 RESTORE = False
 tf.compat.v1.disable_eager_execution()
@@ -32,26 +32,22 @@ def train(img_dir, gt_dir, train_list, pretrained_path):
 
     global_step = tf.Variable(0, trainable=False, name='global_step') # Use tf.Variable
 
-    learning_rate = tf.keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.0001,
-                                                              decay_steps=10000,
-                                                             decay_rate=0.94,
-                                                              staircase=True )
+    def get_learning_rate(global_step):
+      learning_rate_fn = tf.keras.optimizers.schedules.ExponentialDecay(
+        initial_learning_rate=0.0001,
+        decay_steps=10000,
+        decay_rate=0.94,
+        staircase=True
+      )
+      return learning_rate_fn(global_step)
 
-    #initial_learning_rate = 0.1
-    #lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-    #initial_learning_rate=initial_learning_rate,
-    #decay_steps=10000,
-    #decay_rate=0.9,
-    #staircase=True
-    #)
-
-    #optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
-
+    optimizer = tf.compat.v1.train.AdamOptimizer(
+          learning_rate=get_learning_rate(global_step)).minimize(loss, global_step=global_step)
+    
     update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
-            optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-
-
+        train_op = optimizer
+  
     restore_op = slim.assign_from_checkpoint_fn(pretrained_path, slim.get_trainable_variables(),
                                                 ignore_missing_vars=True)
     saver = tf.compat.v1.train.Saver()
@@ -65,14 +61,15 @@ def train(img_dir, gt_dir, train_list, pretrained_path):
             restore_op(sess)
 
         data_list = data_processor.read_lines(train_list)
-        for step in range(377):
+        for step in range(400):
             img_batch, gt_batch = data_processor.next_batch(img_dir, gt_dir, data_list, BATCH_SIZE)
-            s, g, l, lr, _ = sess.run([pred_score, pred_gmt, loss, learning_rate, optimizer],
-                                      feed_dict={img_input: img_batch, gt_input: gt_batch})
+            s, g, l, _ = sess.run([pred_score, pred_gmt, loss, train_op], 
+                       feed_dict={img_input: img_batch, gt_input: gt_batch})
+
             if step % 100 == 0 and step > 0:
-                saver.save(sess=sess, save_path='./checkpoint/east.ckpt', global_step=step)
+                saver.save(sess=sess, save_path='/content/drive/MyDrive/DS_store/DS_train/Det_train/pretrained/Checkpoint', global_step=step)
             if step % 10 == 0:
-                print(step, lr, l)
+                print("the step is :",step, "and the loss is" , l)
 
 
 if __name__ == '__main__':
