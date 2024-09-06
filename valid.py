@@ -1,6 +1,7 @@
 import tensorflow as tf
 import east_model
 import data_processor
+import tf_slim as slim
 import cv2
 import os
 
@@ -26,7 +27,7 @@ def valid(img_dir, gt_dir, valid_list):
         pred_score, pred_gmt = network.build(img_input)
 
     loss = network.loss(gt_input[:, :, :, 0:1], pred_score, gt_input[:, :, :, 1:6], pred_gmt)
-    checkpoint_file =" /content/drive/MyDrive/DS_store/DS_train/Det_train/pretrained/Checkpoint-300.data-00000-of-00001"
+    checkpoint_file ='/content/drive/MyDrive/DS_store/DS_train/Det_train/pretrained/Checkpoint-500'
     cfg = tf.compat.v1.ConfigProto()
     cfg.gpu_options.allow_growth = True
     with tf.compat.v1.Session(config=cfg) as sess:
@@ -45,8 +46,8 @@ def valid(img_dir, gt_dir, valid_list):
                 img_show[:, :, 0] += s[m][:, :, 0] * 255
                 img_show[:, :, 1] += s[m][:, :, 0] * 255
                 img_show[:, :, 2] += s[m][:, :, 0] * 255
-                cv2.imwrite('./demo/' + str(n) + '_' + str(m) + '_img.jpg', img_show)
-                cv2.imwrite('./demo/' + str(n) + '_' + str(m) + '_scr.jpg', s[m] * 255)
+                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/Demo' + str(n) + '_' + str(m) + '_img.jpg', img_show)
+                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/score' + str(n) + '_' + str(m) + '_scr.jpg', s[m] * 255)
 
 if __name__ == '__main__':
     valid('/content/drive/MyDrive/DS_store/DS_train/Det_train/input_img',
