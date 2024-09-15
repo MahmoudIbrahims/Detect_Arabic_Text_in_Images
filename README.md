@@ -17,24 +17,3 @@ You can install the required libraries using `pip`:
 pip install tensorflow opencv-python numpy tf-slim
 ```
 
-## structue project
-project/
-│
-├── README.md
-├── data_processor.py
-├── east_model.py
-├── east_utils.py
-├── test.py
-└── content/
-    └── drive/
-        └── MyDrive/
-            └── DS_store/
-                └── DS_train/
-                    └── Det_train/
-                        ├── pretrained/
-                        │   └── Checkpoint-500
-                        ├── test/
-                        │   └── images/
-                        └── Detection/
-                            └── detect_text/
-
