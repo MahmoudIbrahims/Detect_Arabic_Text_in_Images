@@ -6,18 +6,18 @@ This project implements text detection using the Efficient and Accurate Scene Te
 
 Ensure you have the following dependencies installed:
 
-- TensorFlow (`tensorflow==2.x`)
+- TensorFlow 
 - TensorFlow Slim (`tf-slim`)
 - OpenCV (`opencv-python`)
-- NumPy (`numpy`)
-- Python 3.x
+  
 
 You can install the required libraries using `pip`:
 
 ```bash
 pip install tensorflow opencv-python numpy tf-slim
+```
 
-
+## structue project
 project/
 │
 ├── README.md
