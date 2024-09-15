@@ -9,6 +9,7 @@ Ensure you have the following dependencies installed:
 - TensorFlow 
 - TensorFlow Slim (`tf-slim`)
 - OpenCV (`opencv-python`)
+- shapely
   
 
 You can install the required libraries using `pip`:
