@@ -74,8 +74,8 @@ def valid(img_dir, gt_dir, valid_list):
                         cv2.rectangle(img_show, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Green rectangle for filtered box
 
                 
-                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/Demo' + str(n) + '_' + str(m) + '_img_with_nms.jpg', img_show)
-                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/score' + str(n) + '_' + str(m) + '_scr.jpg', s[m] * 255)
+                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/Demo/Demo' + str(n) + '_' + str(m) + '_img_with_nms.jpg', img_show)
+                cv2.imwrite('/content/drive/MyDrive/DS_store/DS_train/Det_train/Detection/score/score' + str(n) + '_' + str(m) + '_scr.jpg', s[m] * 255)
 
 if __name__ == '__main__':
     valid('/content/drive/MyDrive/DS_store/DS_train/Det_train/input_img',
